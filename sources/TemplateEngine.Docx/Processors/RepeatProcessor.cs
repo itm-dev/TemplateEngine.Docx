@@ -215,14 +215,14 @@ namespace TemplateEngine.Docx.Processors
 				var tagsInPrototype = listItems.DescendantsAndSelf(W.sdt)
 					.Select(sdt => sdt.SdtTagName());
 
-				// If any field not found return empty list.
-				if (fieldNames.Any(fn => !tagsInPrototype.Contains(fn)))
-				{
-					IsValid = false;
-					return;
-				}
+                // If any field not found return empty list.
+                //if (fieldNames.Any(fn => !tagsInPrototype.Contains(fn)))
+                //{
+                //    IsValid = false;
+                //    return;
+                //}
 
-				IsValid = true;
+                IsValid = true;
 				PrototypeItems = listItems;
 			}
 

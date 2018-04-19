@@ -148,7 +148,8 @@ namespace TemplateEngine.Docx.Processors
 		            newRows.Add(newRowsEntry);
 		        }
 
-		        prototypeRows.Last().AddAfterSelf(newRows);              		        
+		        if (prototypeRows.Count > 0)
+		            prototypeRows.Last().AddAfterSelf(newRows);
 
 		        // Remove the prototype rows
 		        prototypeRows.Remove();
@@ -176,13 +177,13 @@ namespace TemplateEngine.Docx.Processors
 				.ToList();
 
 
-			return GetIntermediateAndMergedRows(rowsWithContentControl.First(), rowsWithContentControl.Last(),
-				tableContentControl);
+			return rowsWithContentControl.Count > 0 ? GetIntermediateAndMergedRows(rowsWithContentControl.First(), rowsWithContentControl.Last(),
+				tableContentControl) : rowsWithContentControl;
 		}
 
 		private List<XElement> GetIntermediateAndMergedRows(XElement firstRow, XElement lastRow, XContainer tableContentControl)
 		{
-			var resultRows = new List<XElement>();
+			var resultRows = new HashSet<XElement>();
 
 			var mergeVector = new bool[lastRow.Descendants(W.tc).Count()];
 
@@ -250,7 +251,7 @@ namespace TemplateEngine.Docx.Processors
 			}
 
 
-			return resultRows;
+			return resultRows.ToList();
 		}
 	}
 }

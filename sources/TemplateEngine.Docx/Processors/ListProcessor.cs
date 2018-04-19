@@ -57,11 +57,11 @@ namespace TemplateEngine.Docx.Processors
 					.Select(sdt => sdt.SdtTagName());
 
 				// If any field not found return empty list.
-				if (fieldNames.Any(fn => !tagsInPrototype.Contains(fn)))
-				{
-					IsValid = false;
-					return;
-				}
+				//if (fieldNames.Any(fn => !tagsInPrototype.Contains(fn)))
+				//{
+				//	IsValid = false;
+				//	return;
+				//}
 
 				IsValid = true;
 				PrototypeItems = listItems;
@@ -138,11 +138,11 @@ namespace TemplateEngine.Docx.Processors
 
 				PrototypeItems = currentLevelPrototype;
 
-				if (fieldNames.Any(fn => !SdtTags.Contains(fn)))
-				{
-					IsValid = false;
-					return;
-				}
+				//if (fieldNames.Any(fn => !SdtTags.Contains(fn)))
+				//{
+				//	IsValid = false;
+				//	return;
+				//}
 
 				IsValid = true;
 				PrototypeItems = currentLevelPrototype;
@@ -261,8 +261,8 @@ namespace TemplateEngine.Docx.Processors
 		                    string.Format("doesn't contain items with content controls {0}",
 		                        string.Join(", ", fieldNames))));
 
-		            return processResult;
-		        }
+                    return processResult;
+                }
 
 		        new NumberingAccessor(_context.Document.NumberingPart, _context.LastNumIds)
 		            .ResetNumbering(prototype.PrototypeItems);
