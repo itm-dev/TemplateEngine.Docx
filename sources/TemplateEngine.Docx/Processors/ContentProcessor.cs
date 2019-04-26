@@ -39,9 +39,10 @@ namespace TemplateEngine.Docx.Processors
 			var processedItems = new List<IContentItem>();
 			data = data.ToList();
 
-		    var dictionaryContentControls = FindContentControls(content).GroupBy(xElement => xElement.SdtTagName()).ToDictionary(g => g.Key, g => g.ToList());
+		    var dictionaryContentControls = new SortedDictionary<string, List<XElement>>(
+                FindContentControls(content).GroupBy(xElement => xElement.SdtTagName()).ToDictionary(g => g.Key, g => g.ToList()));
 
-            foreach (var contentItems in data.GroupBy(d => d.Name))
+            foreach (var contentItems in data.OrderBy(x => x is FieldContent ? 0 : 1).GroupBy(d => d.Name))
 			{                
 				if (processedItems.Any(i=>i.Name == contentItems.Key)) continue;
 
