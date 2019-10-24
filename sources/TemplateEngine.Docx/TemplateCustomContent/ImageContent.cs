@@ -17,7 +17,14 @@ namespace TemplateEngine.Docx
             Binary = binary;
         }
 
+        public ImageContent(string name, string filePath)
+        {
+            Name = name;
+            FilePath = filePath;
+        }
+
         public byte[] Binary { get; set; }
+        public string FilePath { get; set; }
 
         #region Equals
 
@@ -26,7 +33,8 @@ namespace TemplateEngine.Docx
 			if (other == null) return false;
 
 			return Name.Equals(other.Name, StringComparison.InvariantCultureIgnoreCase) &&
-			       Binary.SequenceEqual(other.Binary);
+			       (Binary != null ? Binary.SequenceEqual(other.Binary) : other.Binary == null) &&
+			       (FilePath != null ? FilePath.Equals(other.FilePath) : other.FilePath == null);
 		}
 
 		public override bool Equals(IContentItem other)
@@ -38,7 +46,7 @@ namespace TemplateEngine.Docx
 
 		public override int GetHashCode()
 		{
-			return new {Name, Binary}.GetHashCode();
+			return new {Name, Binary, FilePath}.GetHashCode();
 		}
 
 		#endregion

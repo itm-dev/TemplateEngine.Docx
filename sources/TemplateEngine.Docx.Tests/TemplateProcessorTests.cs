@@ -476,41 +476,41 @@ namespace TemplateEngine.Docx.Tests
 			Assert.AreEqual(expectedNumbering.ToString(), filledDocument.NumberingPart.ToString());
 		}
 
-		[TestMethod]
-		public void FillingOneListWithWrongValues_WillNoticeWithWarning()
-		{
+		//[TestMethod]
+		//public void FillingOneListWithWrongValues_WillNoticeWithWarning()
+		//{
 
-			var templateDocument = XDocument.Parse(Resources.TemplateWithSingleList_document);
-			var templateStyles = XDocument.Parse(Resources.TemplateWithSingleList_styles);
-			var templateNumbering = XDocument.Parse(Resources.TemplateWithSingleList_numbering);
+		//	var templateDocument = XDocument.Parse(Resources.TemplateWithSingleList_document);
+		//	var templateStyles = XDocument.Parse(Resources.TemplateWithSingleList_styles);
+		//	var templateNumbering = XDocument.Parse(Resources.TemplateWithSingleList_numbering);
 
-			var expectedDocument = XDocument.Parse(Resources.DocumentWithSingleListWrongFilled_document);
-			var expectedStyles = XDocument.Parse(Resources.DocumentWithSingleListWrongFilled_styles);
-			var expectedNumbering = XDocument.Parse(Resources.DocumentWithSingleListWrongFilled_numbering);
+		//	var expectedDocument = XDocument.Parse(Resources.DocumentWithSingleListWrongFilled_document);
+		//	var expectedStyles = XDocument.Parse(Resources.DocumentWithSingleListWrongFilled_styles);
+		//	var expectedNumbering = XDocument.Parse(Resources.DocumentWithSingleListWrongFilled_numbering);
 
-			var valuesToFill = new Content
-			{
-				Lists = new List<ListContent>
-                {
-                    new ListContent 
-                    {
-                        Name = "Food Items",
-						Items = new List<ListItemContent>
-                        {                   
-                             new ListItemContent ("WrongListItem", "Fruit")
-                        }
-                    }
-                }
-			};
+		//	var valuesToFill = new Content
+		//	{
+		//		Lists = new List<ListContent>
+  //              {
+  //                  new ListContent 
+  //                  {
+  //                      Name = "Food Items",
+		//				Items = new List<ListItemContent>
+  //                      {                   
+  //                           new ListItemContent ("WrongListItem", "Fruit")
+  //                      }
+  //                  }
+  //              }
+		//	};
 
-			var filledDocument = new TemplateProcessor(templateDocument, templateStyles, templateNumbering)
-				.SetRemoveContentControls(true)
-				.FillContent(valuesToFill);
+		//	var filledDocument = new TemplateProcessor(templateDocument, templateStyles, templateNumbering)
+		//		.SetRemoveContentControls(true)
+		//		.FillContent(valuesToFill);
 
-			Assert.AreEqual(expectedDocument.ToString(), filledDocument.Document.ToString());
-			Assert.AreEqual(expectedStyles.ToString(), filledDocument.StylesPart.ToString());
-			Assert.AreEqual(expectedNumbering.ToString(), filledDocument.NumberingPart.ToString());
-		}
+		//	Assert.AreEqual(expectedDocument.ToString(), filledDocument.Document.ToString());
+		//	Assert.AreEqual(expectedStyles.ToString(), filledDocument.StylesPart.ToString());
+		//	Assert.AreEqual(expectedNumbering.ToString(), filledDocument.NumberingPart.ToString());
+		//}
 
 
 

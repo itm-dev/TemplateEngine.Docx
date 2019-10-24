@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
+using TemplateEngine.Docx.Errors;
 
 namespace TemplateEngine.Docx.Processors
 {
@@ -38,17 +39,22 @@ namespace TemplateEngine.Docx.Processors
 			var processedItems = new List<IContentItem>();
 			data = data.ToList();
 
-			foreach (var contentItems in data.GroupBy(d => d.Name))
+		    var dictionaryContentControls = new SortedDictionary<string, List<XElement>>(
+                FindContentControls(content).GroupBy(xElement => xElement.SdtTagName()).ToDictionary(g => g.Key, g => g.ToList()));
+
+            foreach (var contentItems in data.OrderBy(x => x is FieldContent ? 0 : 1).GroupBy(d => d.Name))
 			{                
 				if (processedItems.Any(i=>i.Name == contentItems.Key)) continue;
 
-				var contentControls = FindContentControls(content, contentItems.Key).ToList();
+				var itemsContentControls = dictionaryContentControls.ContainsKey(contentItems.Key) ? dictionaryContentControls[contentItems.Key] : null;
 
-				//Need to get error message from processor.
-				if (!contentControls.Any())
-					contentControls.Add(null);
+			    if (itemsContentControls == null) continue;
 
-				foreach (var xElement in contentControls)
+				////Need to get error message from processor.
+				//if (!itemsContentControls.Any())
+				//    itemsContentControls.Add(null);
+
+				foreach (var xElement in itemsContentControls)
 				{
 					if (contentItems.Any(item => item is TableContent) && xElement != null)
 					{
@@ -68,7 +74,13 @@ namespace TemplateEngine.Docx.Processors
 				}
 			}
 
-			return result;
+		    var notFoundTagNames =
+		        dictionaryContentControls.Keys.Where(tagName => !data.Any(contentItem => contentItem.Name == tagName));
+		    foreach (var tagName in notFoundTagNames)
+		        result.AddError(new CustomError(string.Format("Field content for field '{0}' not found", tagName)));
+
+
+            return result;
 		}
 
 		/// <summary>
@@ -106,6 +118,16 @@ namespace TemplateEngine.Docx.Processors
 		{
 			return FillContent(content, new List<IContentItem>{data});
 		}
+
+		private IEnumerable<XElement> FindContentControls(XElement content)
+		{
+		    return content
+		        //top level content controls
+		        .FirstLevelDescendantsAndSelf(W.sdt)
+		        //with specified tagName
+		        .Where(sdt => sdt.SdtTagName() != null);
+		}
+
 		private IEnumerable<XElement> FindContentControls(XElement content, string tagName)
 		{
             return content

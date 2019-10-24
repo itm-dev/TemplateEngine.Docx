@@ -81,7 +81,11 @@ namespace TemplateEngine.Docx.Processors
 		            _context.Document.RemovePartById(imageId);
 		        }
 
-		        var imagePartId = _context.Document.AddImagePart(field.Binary);
+		        string imagePartId;
+		        if (field.Binary != null)
+		            imagePartId = _context.Document.AddImagePart(field.Binary); 
+                else
+		            imagePartId = _context.Document.AddImagePart(System.IO.File.ReadAllBytes(field.FilePath));
 
 		        blip.Attribute(R.embed).SetValue(imagePartId);
             }                    

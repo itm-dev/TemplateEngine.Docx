@@ -10,13 +10,13 @@ namespace TemplateEngine.Docx
             
         }
 
-        public FieldContent(string name, string value)
+        public FieldContent(string name, object value)
         {
             Name = name;
             Value = value;
         }
    
-	    public string Value { get; set; }
+	    public object Value { get; set; }
 
 	    #region Equals
 
@@ -25,7 +25,7 @@ namespace TemplateEngine.Docx
 			if (other == null) return false;
 
 			return Name.Equals(other.Name) &&
-			       Value.Equals(other.Value);
+			       (Value != null ? Value.Equals(other.Value) : other.Value == null);
 		}
 
 		public override bool Equals(IContentItem other)

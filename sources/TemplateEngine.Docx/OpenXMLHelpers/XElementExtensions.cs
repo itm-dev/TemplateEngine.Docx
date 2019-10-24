@@ -121,17 +121,22 @@ namespace TemplateEngine.Docx
 		}
 
 
-		public static string SdtTagName(this XElement sdt)
+		public static string SdtTagName(this XElement sdt, bool ignoreFormatInName = true)
 		{
 			if (sdt.Name != W.sdt) return null;
 
 			try
 			{
-				return sdt
-					?.Element(W.sdtPr)
-					?.Element(W.tag)
-					?.Attribute(W.val)
-					?.Value;
+			    string stdTagName = sdt
+			        .Element(W.sdtPr)
+			        .Element(W.tag)
+			        .Attribute(W.val)
+			        .Value;
+
+			    if (ignoreFormatInName && stdTagName.Contains(":"))
+			        stdTagName = stdTagName.Split(':')[0];
+
+                return stdTagName;
 			}
 			catch (Exception)
 			{

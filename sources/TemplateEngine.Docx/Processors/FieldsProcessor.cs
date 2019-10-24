@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Xml.Linq;
 using DocumentFormat.OpenXml.Wordprocessing;
 using TemplateEngine.Docx.Errors;
@@ -45,12 +46,31 @@ namespace TemplateEngine.Docx.Processors
 			// and continue with next field.
 			if (contentControl == null)
 			{
-				processResult.AddError(new ContentControlNotFoundError(field));
-				return processResult;
+                processResult.AddError(new ContentControlNotFoundError(field));
+                return processResult;
 			}
 
-            var newValue = field.IsHidden ? "" : field.Value;
-			contentControl.ReplaceContentControlWithNewValue(newValue);
+		    string stdTagName = contentControl.SdtTagName(false);
+
+		    if (stdTagName.Contains(":"))
+		    {
+		        try
+		        {
+		            var newValue = field.IsHidden
+		                ? ""
+		                : string.Format("{0:" + stdTagName.Split(':')[1] + "}", field.Value);
+		            contentControl.ReplaceContentControlWithNewValue(newValue);
+		        }
+		        catch (Exception e)
+		        {
+		            processResult.AddError(new CustomContentItemError(field, e.Message));
+		        }
+            }
+            else
+		    {
+		        var newValue = field.IsHidden ? "" : string.Format("{0}", field.Value);
+		        contentControl.ReplaceContentControlWithNewValue(newValue);
+		    }
 
 			processResult.AddItemToHandled(item);
 
